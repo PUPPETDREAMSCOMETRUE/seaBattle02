@@ -1,11 +1,17 @@
-class Player {
-    var name: String = ""
+class Player(val name: String) {
+    private val _field: Array<Array<CellState>> =
+        Array(10) { Array(10) { CellState.EMPTY} }
+    fun field(): Array<Array<CellState>> = _field
     var shipsLeft: Int = 20
     var field: Array<CharArray> = Array(10) {
         CharArray(10) { '.'}
     }
-    var shots: Int = 0
-    var hits: Int = 0
+    private var _shots: Int = 0
+    private var _hits: Int = 0
+    val shots: Int
+        get() = _shots
+    val hits: Int
+        get() = _hits
     fun printField(showShips: Boolean = true, debug: Boolean = false) {
         println(" ===    $name    ===")
         val size = field.size
@@ -61,30 +67,41 @@ class Player {
         }
     }
     fun accuracy(): Double {
-        if (shots == 0) {
+        if (_shots == 0) {
             return 0.0
         }
-        return hits *  100.0 / shots
+        return _hits *  100.0 / _shots
     }
     fun takeDamage(): Boolean {
         shipsLeft--
         if (isAlive()) {return true}
         else {return false}
     }
-    fun registerShot(hit: Boolean) {shots++
-    if (hit) {hits++} }
+    fun registerShot(hit: Boolean) {_shots++
+    if (hit) {_hits++} }
     fun reset() {
-        shots = 0
-        hits = 0
-        shipsLeft = 20
+        _shots = 0
+        _hits = 0
         for (r in 0 until field.size) {
             for (c in 0 until field[r].size) {
-                field[r][c] = '.'
+                _field[r][c] = CellState.EMPTY
             }
         }
     }
-    fun printStatus(){
+    fun printStatus(): String {
         val currentAccuracy = String.format("%.1f", accuracy())
-        println("Игрок $name: палуб осталось $shipsLeft, выстрелов $shots, попадений $hits, точность $currentAccuracy%")
+        return("Игрок $name: палуб осталось $shipsLeft, выстрелов $shots, попадений $hits, точность $currentAccuracy%")
     }
+    fun placeShip(row: Int, col: Int) {
+        if (row in 0..9 && col in 0..9) {
+            _field[row][col] = CellState.SHIP
+        }
+    }
+    fun markShot(row: Int, col: Int, hit: Boolean) {
+        if (row in 0..9 && col in 0..9) {
+            _field[row][col] = if (hit) CellState.HIT
+            else CellState.MISS
+        }
+    }
+
 }

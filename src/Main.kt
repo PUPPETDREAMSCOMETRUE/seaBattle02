@@ -38,12 +38,20 @@ fun printBothFields(player1: Player, player2: Player, showShips: Boolean = false
 }
 
 fun main() {
-    val player = Player()
-    player.name = "Вы"
+    val player1 = Player("Вы")
+    val player2 = Player("Компьютер")
+    player1.placeShip(3, 2)
+    player1.placeShip(3, 3)
+    player1.placeShip(3, 4)
+    player1.placeShip(3, 5)
 
-    player.registerShot(true)    // попал
-    player.registerShot(false)   // промах
-    player.registerShot(true)    // попал
+    player2.placeShip(5, 7)
+    player1.placeShip(6, 7)
+    player1.placeShip(7, 7)
+
+    player1.registerShot(true)    // попал
+    player1.registerShot(false)   // промах
+    player1.registerShot(true)    // попал
 
     player.printStatus()
 // Игрок Вы: палуб осталось 20, выстрелов 3, попаданий 2, точность 66.7%
