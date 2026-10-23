@@ -1,5 +1,6 @@
 class Player {
     var name: String = ""
+    var shipsLeft: Int = 20
     var field: Array<CharArray> = Array(10) {
         CharArray(10) { '.'}
     }
@@ -51,7 +52,39 @@ class Player {
             }
         }
     }
+    fun isAlive(): Boolean {
+        if (shipsLeft > 0) {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    fun accuracy(): Double {
+        if (shots == 0) {
+            return 0.0
+        }
+        return hits *  100.0 / shots
+    }
+    fun takeDamage(): Boolean {
+        shipsLeft--
+        if (isAlive()) {return true}
+        else {return false}
+    }
+    fun registerShot(hit: Boolean) {shots++
+    if (hit) {hits++} }
+    fun reset() {
+        shots = 0
+        hits = 0
+        shipsLeft = 20
+        for (r in 0 until field.size) {
+            for (c in 0 until field[r].size) {
+                field[r][c] = '.'
+            }
+        }
+    }
     fun printStatus(){
-        println("Игрок $name: выстрелов $shots, попадений $hits")
+        val currentAccuracy = String.format("%.1f", accuracy())
+        println("Игрок $name: палуб осталось $shipsLeft, выстрелов $shots, попадений $hits, точность $currentAccuracy%")
     }
 }
